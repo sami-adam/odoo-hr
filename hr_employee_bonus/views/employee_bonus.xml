@@ -1,0 +1,79 @@
+<odoo>
+    <!-- Views -->
+    <record id="view_employee_bonus_form" model="ir.ui.view">
+        <field name="name">Employee Bonus Form</field>
+        <field name="model">hr.employee.bonus</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_confirm" type="object" string="Confirm" states="draft" groups="hr.group_hr_user" class="oe_highlight"/>
+                    <button name="action_cancel" type="object" string="Cancel" states="confirmed" groups="hr.group_hr_user"/>
+                    <button name="action_draft" type="object" string="Set To Draft" states="cancelled" groups="base.group_system"/>
+                    <field name="state" widget="statusbar" readonly="1"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1 style="color:#7c7bad"><field name="name" placeholder="Description ..." required="1" attrs="{'readonly':[('state','!=','draft')]}"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="employee_id" required="1" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="calculation_type" invisible="1"/>
+                            <field name="bonus_type_id" required="1" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="amount_percentage" string="Amount" attrs="{'invisible':[('calculation_type','not in', ['fixed',False])],
+                            'required':[('calculation_type','=','fixed')],'readonly':[('state','!=','draft')]}"/>
+                            <field name="amount_percentage" string="Percentage Of Salary" attrs="{'invisible':[('calculation_type','!=', 'percentage')],
+                            'required':[('calculation_type','=','percentage')],'readonly':[('state','!=','draft')]}"/>
+                            <field name="amount_percentage" string="Percentage Of Day Amount" attrs="{'invisible':[('calculation_type','!=', 'days')],
+                            'required':[('calculation_type','=','days')],'readonly':[('state','!=','draft')]}"/>
+                            <field name="bonus_amount" readonly="1" attrs="{'invisible':[('state','=','draft')]}" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                        <group>
+                            <field name="date" required="1" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="quantity" required="1" attrs="{'readonly':[('state','!=','draft')]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Other Information">
+                            <group>
+                                <group>
+                                    <field name="department_id" readonly="1"/>
+                                    <field name="job_id" readonly="1"/>
+                                    <field name="user_id" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="date_confirm" readonly="1" attrs="{'invisible':[('state','=','draft')]}"/>
+                                    <field name="note"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_employee_bonus_tree" model="ir.ui.view">
+        <field name="name">Employee Bonus Tree</field>
+        <field name="model">hr.employee.bonus</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="date"/>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="job_id"/>
+                <field name="bonus_type_id"/>
+                <field name="user_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+    <!-- Menuitems and Actions -->
+    <act_window id="action_employee_bonus" name="Employee Bonus" res_model="hr.employee.bonus" view_mode="tree,form"/>
+    <menuitem id="menu_employee_bonus" name="Employee Bonus" action="action_employee_bonus" parent="hr.menu_hr_root"/>
+</odoo>

@@ -1,0 +1,49 @@
+<odoo>
+    <!-- Views -->
+    <record id="view_employee_bonus_type_form" model="ir.ui.view">
+        <field name="name">Employee Bonus Type Form</field>
+        <field name="model">hr.employee.bonus.type</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" groups="hr.group_hr_user" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name" placeholder="Bonus Type Name"/>
+                            <field name="salary_rule_ids" widget="many2many_tags"
+                                   attrs="{'invisible':[('calculation_type','not in',['percentage', 'days'])],
+                                   'required':[('calculation_type','in',['percentage', 'days'])]}"/>
+                        </group>
+                        <group>
+                            <field name="calculation_type" required="1"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_employee_bonus_type_tree" model="ir.ui.view">
+        <field name="name">Employee Bonus Type Tree</field>
+        <field name="model">hr.employee.bonus.type</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="calculation_type"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Menuitems and Actions -->
+    <act_window id="action_employee_bonus_type" name="Bonus Types" res_model="hr.employee.bonus.type" view_mode="tree,form"/>
+    <menuitem id="menu_employee_bonus_type" name="Bonus Types" action="action_employee_bonus_type" parent="hr.menu_human_resources_configuration"/>
+</odoo>
